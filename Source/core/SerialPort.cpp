@@ -643,35 +643,27 @@ namespace Core {
         if (m_Descriptor != -1) {
             // Before we delete the descriptor, get ride of the Trigger
             // subscribtion.
+            Core::ResourceMonitor::Instance().Unregister(*this);
             m_State |= SerialPort::EXCEPTION;
             m_State &= ~SerialPort::OPEN;
             close(m_Descriptor);
             m_Descriptor = -1;
-            ResourceMonitor::Instance().Break();
-
-            m_syncAdmin.Unlock();
-
-            WaitForClosure(waitTime);
-        } else {
+            Closed();
+        }
 #endif
 
 #ifdef __WIN32__
             if (m_Descriptor != INVALID_HANDLE_VALUE) {
-
+                Core::ResourceMonitor::Instance().Unregister(*this);
                 m_State |= SerialPort::EXCEPTION;
                 m_State &= ~SerialPort::OPEN;
                 ::CloseHandle(m_Descriptor);
                 m_Descriptor = INVALID_HANDLE_VALUE;
-                g_SerialPortMonitor.Break();
-
-                m_syncAdmin.Unlock();
-
-                WaitForClosure(waitTime);
-            } else {
+                Closed();
+            } 
 #endif
 
                 m_syncAdmin.Unlock();
-            }
 
             return (Core::ERROR_NONE);
         }
