@@ -653,7 +653,7 @@ namespace Wayland {
                     _eglSurfaceWindow = eglCreateWindowSurface(
                         _display->_eglDisplay,
                         _display->_eglConfig,
-                        static_cast<EGLNativeWindowType>(nullptr),
+                        reinterpret_cast<EGLNativeWindowType>(NULL),
                         nullptr);
                 }
 
