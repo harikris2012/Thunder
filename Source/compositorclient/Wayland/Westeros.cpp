@@ -653,7 +653,8 @@ namespace Wayland {
                     _eglSurfaceWindow = eglCreateWindowSurface(
                         _display->_eglDisplay,
                         _display->_eglConfig,
-                        reinterpret_cast<EGLNativeWindowType>(NULL),
+                        reinterpret_cast<EGLNativeWindowType>(NULL), // Kept it as NULL to support casting to both pointer and non pointer type,
+                                                                     // based on the EGLNativeWindowType provided by the platform
                         nullptr);
                 }
 
