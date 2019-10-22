@@ -111,7 +111,9 @@ namespace Exchange {
         ID_TOUCHPRODUCER,
 
         ID_STREAM_ELEMENT,
-        ID_STREAM_ELEMENT_ITERATOR
+        ID_STREAM_ELEMENT_ITERATOR,
+
+        ID_KEYPRODUCER_NOTIFICATION
     };
 }
 }

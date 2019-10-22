@@ -71,6 +71,25 @@ namespace Exchange {
         virtual uint32_t Error() const = 0;
         virtual string MetaData() const = 0;
         virtual void Configure(const string& settings) = 0;
+
+        enum KeyProducerEvents
+        {
+            ePairingStarted,
+            ePairingSuccess,
+            ePairingFailed,
+            ePairingTimedout
+        };
+
+        struct INotification : virtual public IUnknown {
+            enum {ID = ID_KEYPRODUCER_NOTIFICATION};
+
+            virtual ~INotification()
+            {
+            }
+
+            virtual void KeyProducerEvent(const KeyProducerEvents) = 0;
+        };
+
     };
 
     struct IWheelProducer : virtual public Core::IUnknown {
