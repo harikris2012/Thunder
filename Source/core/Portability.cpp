@@ -65,18 +65,12 @@ static void* GetPCFromUContext(void* secret)
 
 static void OverrideStackTopWithPC(void** stack, int stackSize, void* secret)
 {
-    bool foundNull = false;
 
     int i;
     for (i = 0; i < stackSize; i++) {
         void* ptr = stack[i];
-
-        if (ptr != nullptr && foundNull) {
-            // Found first non-null entry.
-            --i;
+        if (ptr == nullptr) {
             break;
-        } else if (ptr == nullptr) {
-            foundNull = true;
         }
     }
 
