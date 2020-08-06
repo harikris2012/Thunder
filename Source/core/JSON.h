@@ -2360,15 +2360,21 @@ namespace Core {
                     if (offset >= PARSE) {
                         offset -= PARSE;
                         loaded += static_cast<const IElement&>(_iterator.Current()).Serialize(&(stream[loaded]), maxLength - loaded, offset);
-                        offset = (offset != 0 ? offset + PARSE : (_iterator.Next() == true ? BEGIN_MARKER : ~0));
+                        offset = ((offset != 0 && (offset != static_cast<uint16_t>(~0)) ? (offset + PARSE) : (_iterator.Next() == true ? BEGIN_MARKER : ~0)));
                     } else if (offset == BEGIN_MARKER) {
                         stream[loaded++] = ',';
                         offset = PARSE;
+                    } else if (_iterator.Next() == false) {
+                        offset = ~0;
                     }
                 }
                 if ((offset == static_cast<uint16_t>(~0)) && (loaded < maxLength)) {
                     stream[loaded++] = ']';
                     offset = 0;
+                }
+
+                if ((offset == static_cast<uint16_t>(~0)) & (loaded >= maxLength)) {
+                    offset = END_MARKER;
                 }
 
                 return (loaded);
@@ -2731,7 +2737,7 @@ namespace Core {
                     if (offset >= PARSE) {
                         offset -= PARSE;
                         loaded += _current.json->Serialize(&(stream[loaded]), maxLength - loaded, offset);
-                        offset = (offset == 0 ? BEGIN_MARKER : offset + PARSE);
+                        offset = (offset == 0 ? BEGIN_MARKER : (offset != static_cast<uint16_t>(~0) ? (offset + PARSE) : offset));
                     } else if (offset == BEGIN_MARKER) {
                         if (_current.json == &_fieldName) {
                             stream[loaded++] = ':';
@@ -2752,6 +2758,10 @@ namespace Core {
                 if ((offset == static_cast<uint16_t>(~0)) && (loaded < maxLength)) {
                     stream[loaded++] = '}';
                     offset = 0;
+                }
+
+                if ((offset == static_cast<uint16_t>(~0)) && (loaded >= maxLength)) {
+                    offset = END_MARKER;
                 }
 
                 return (loaded);
